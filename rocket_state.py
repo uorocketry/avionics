@@ -1,5 +1,7 @@
-import UOSTAR
+import uostar
 
 def parse(accel, gps, baro):
-    #integrate accelerometer to find velocity
-    #transmit data asynchronously to application after putting it in standard format
+    x = uostar.Coords(3,4)
+    #x.to_string()
+    #temporarily just returns a string for testing
+    return "rocket_state"
