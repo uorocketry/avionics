@@ -1,4 +1,4 @@
-#an implementation of the Publisher Subscriber model for rocket data
+#an implementation of the Observer pattern for rocket data
 
 class subscriber:
     def __init__(self, name):
