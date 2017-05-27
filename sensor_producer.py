@@ -33,7 +33,7 @@ def get_gps():
     return 1#poll gps and return gps data
 
 def get_accel():
-    return i2c.readS16()#return
+    return i2c.readS8(0)#return
     #poll accelerometer and return acceleration value
 
 def get_baro():

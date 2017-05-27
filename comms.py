@@ -1,17 +1,17 @@
 #code for comms for UOSTAR
 
-import Adafruit_BBIO.UART as UART
 import serial
+import Adafruit_BBIO.UART as UART
   
-UART.setup("UART2")
+UART.setup("UART1")
 
-ser = serial.Serial(port = "/dev/ttyO2", baudrate=9600)
-ser.close()
-ser.open()
-if ser.isOpen():
-	print "Port Open"
-    ser.write("Test Transmission")
-ser.close()
+ser = serial.Serial(port = '/dev/ttyO1', baudrate=9600)
+while(1):
+	while ser.inWaiting()==0:
+		pass
+	output = ser.readline()
+	print output
+
  
 # Eventually, you'll want to clean up, but leave this commented for now, 
 # as it doesn't work yet
