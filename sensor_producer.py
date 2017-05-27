@@ -1,8 +1,11 @@
 from collections import namedtuple
 import threading
+from Adafruit_I2C import Adafruit_I2C
 import rocket_state
 #import Adafruit_BBIO.UART as UART
 import serial
+i2c = Adafruit_I2C(0x53)
+#we have a device on 0x53 and 0x68
 
 print "start"
 
@@ -30,7 +33,7 @@ def get_gps():
     return 1#poll gps and return gps data
 
 def get_accel():
-    return 2#return
+    return i2c.readS16()#return
     #poll accelerometer and return acceleration value
 
 def get_baro():

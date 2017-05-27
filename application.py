@@ -1,6 +1,7 @@
 from threading import Thread
 import time
 import sensor_producer
+import sensor_observer
 from Queue import Queue
 import serial
 
@@ -8,6 +9,10 @@ import serial
 sensorObservers= []
 sensorConsumers= []
 queue = Queue(1)
+
+app_data = sensor_observer.publisher()
+#app_data.
+
 
 #highest level class
 #it is the subject in the observer pattern
