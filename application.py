@@ -2,6 +2,8 @@ from threading import Thread
 import time
 import sensor_producer
 from Queue import Queue
+import serial
+
 
 sensorObservers= []
 sensorConsumers= []
@@ -21,7 +23,7 @@ class publisher_thread(Thread):
     def run(self):
         global queue
         while True:
-            queue.put(get_sensor_data())
+            queue.put(sensor_producer.poll_sensors())
             #print "Produced", string
             time.sleep(0.2)
 
@@ -29,13 +31,19 @@ class publisher_thread(Thread):
 class consumer_thread(Thread):
     def run(self):
         while True:
-            string = queue.get()
-            print "Consumed", string
+            data = queue.get()
+            print "Consumed", data
+            if ser.isOpen():
+                ser.write(str(data+"\r\n"))
+                #response = ser.read(ser.inWaiting())
             time.sleep(0.2)
 
-def get_sensor_data():
-    sensor_producer.poll_sensors()
 
+#opening the serial port on the beaglebone usb port
+ser = serial.Serial()
+ser.port = "/dev/ttyUSB0"
+ser.baudrate = 9600
+ser.open()
 
 
 publisher_thread().start()

@@ -1,7 +1,6 @@
 from collections import namedtuple
 import threading
 import rocket_state
-import sensor_observer
 #import Adafruit_BBIO.UART as UART
 import serial
 
@@ -20,17 +19,12 @@ print "start"
 
     #transmit data asynchronously to application after putting it in standard format
 def poll_sensors():
-    #threading.Timer(1.0, poll_sensors).start()
     accel=get_accel() #get accelerometer data
     gps=get_gps()   #get gps data
     baro=get_baro()  #get pressure data
-
     state= rocket_state.parse(accel,gps,baro)
-
-    #print state
     #publisher.dispatch(state)
     return state
-
 
 def get_gps():
     return 1#poll gps and return gps data
