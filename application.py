@@ -36,6 +36,7 @@ class publisher_thread(Thread):
 class consumer_thread(Thread):
     def run(self):
         while True:
+	#main thread deserializes data
             data = json.loads(queue.get())
             gps_data = str(data['GPS'] )
             time_data = str(data["Time"])
@@ -48,11 +49,12 @@ class consumer_thread(Thread):
 
 
 #opening the serial port on the beaglebone usb port
+#this should really not be done in this class, there should be a serial communication class that is passed parameters
 ser = serial.Serial()
 ser.port = "/dev/ttyUSB0"
 ser.baudrate = 9600
 ser.open()
 
-
+#starting the threads 
 publisher_thread().start()
 consumer_thread().start()
