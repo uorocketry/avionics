@@ -4,7 +4,7 @@ from Adafruit_I2C import Adafruit_I2C
 import rocket_state
 #import Adafruit_BBIO.UART as UART
 import serial
-i2c = Adafruit_I2C(0x53)
+i2c = Adafruit_I2C(0x53,2) #68 is gyro
 #we have a device on 0x53 and 0x68
 
 print "start"
@@ -33,7 +33,8 @@ def get_gps():
     return 1#poll gps and return gps data
 
 def get_accel():
-    return i2c.readS8(0)#return
+    i2c.write8(45, 8) #powering on the accelerometer
+    return i2c.readS8(54)#return
     #poll accelerometer and return acceleration value
 
 def get_baro():
