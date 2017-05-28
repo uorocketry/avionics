@@ -4,7 +4,7 @@ import sensor_producer
 import sensor_observer
 from Queue import Queue
 import serial
-
+import json
 
 sensorObservers= []
 sensorConsumers= []
@@ -36,10 +36,13 @@ class publisher_thread(Thread):
 class consumer_thread(Thread):
     def run(self):
         while True:
-            data = queue.get()
+            data = json.loads(queue.get())
+            gps_data = str(data['GPS'] )
+            time_data = str(data["Time"])
+            #data = queue.get()
             print "Consumed", data
             if ser.isOpen():
-                ser.write(str(data+"\r\n"))
+                ser.write(str(time_data+"\r\n"))
                 #response = ser.read(ser.inWaiting())
             time.sleep(0.2)
 
