@@ -6,5 +6,11 @@ from datetime import datetime
 
 def parse(accel, gps, baro):
     x = uostar.Coords(3,4)
-    output = json.dumps({"Acceleration":accel,"GPS":gps,"pressure":baro,"Time": str(datetime.now())})
+    data = {
+    "Acceleration":accel,
+    "GPS":gps,
+    "pressure":baro,
+    "Time": str(datetime.now())
+    }    
+    output = json.dumps(data)
     return output

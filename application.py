@@ -25,8 +25,8 @@ class publisher_thread(Thread):
         while True:
             queue.put(sensor_producer.poll_sensors())
             #print "Produced", string
-            time.sleep(0.2)
-
+            time.sleep(0.15)
+#find some way to use queue.join() and queue.task_done()
 #thread that receives data from sensor_producer via data_thread
 class consumer_thread(Thread):
     def run(self):
@@ -36,7 +36,7 @@ class consumer_thread(Thread):
             data["velocity"]=uostar.integrate_2(1,1,1,1)
             print "received sensor data at: ", str(data["Time"])
             app_data.dispatch(data)
-            time.sleep(0.2)
+            time.sleep(0.15)
 
 class serial_telemetry_subscriber(sensor_observer.subscriber):
     def __init__(self, name, port, baudrate):
