@@ -4,6 +4,8 @@ from Adafruit_I2C import Adafruit_I2C
 import rocket_state
 #import Adafruit_BBIO.UART as UART
 import serial
+import uostar
+import datetime
 #i2c = Adafruit_I2C(0x53,2) #68 is gyro
 #we have a device on 0x53 and 0x68
 
@@ -25,9 +27,8 @@ def poll_sensors():
     accel=get_accel() #get accelerometer data
     gps=get_gps()   #get gps data
     baro=get_baro()  #get pressure data
-    state= rocket_state.parse(accel,gps,baro)
     #publisher.dispatch(state)
-    return state
+    return uostar.RocketState(accel,gps,datetime.datetime.now())
 
 def get_gps():
     return 1#poll gps and return gps data
