@@ -8,3 +8,7 @@ class Coords:
 
     def to_string():
         print "("+x+","+y+")"
+
+def integrate_2(t1,t2,y1,y2):
+    output = (y2+y1)*(t2-t1)/2
+    return output

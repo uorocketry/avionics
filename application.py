@@ -5,22 +5,17 @@ import sensor_observer
 from Queue import Queue
 import serial
 import json
+import uostar
 
-sensorObservers= []
-sensorConsumers= []
+#global queue
+#Queue.Queue has an implentation of publisher/subscriber pattern built into it
 queue = Queue(1)
 
-app_data = sensor_observer.publisher()
-#app_data.
-
-
 #highest level class
-#it is the subject in the observer pattern
-#has a list of all observers
+#it is the subject in the observer pattern, has a list of all observers
 
 #store the current rocket_state and the previous rocket_state
 #use them to integrate acceleration over the time interval to find velocity
-#i.e (accel(current state)+accel(previous state))*(time2-time1)/2
 
 
 #producer Thread
@@ -38,23 +33,43 @@ class consumer_thread(Thread):
         while True:
 	#main thread deserializes data
             data = json.loads(queue.get())
-            gps_data = str(data['GPS'] )
-            time_data = str(data["Time"])
-            #data = queue.get()
-            print "Consumed", data
-            if ser.isOpen():
-                ser.write(str(time_data+"\r\n"))
-                #response = ser.read(ser.inWaiting())
+            data["velocity"]=uostar.integrate_2(1,1,1,1)
+            print "received sensor data at: ", str(data["Time"])
+            app_data.dispatch(data)
             time.sleep(0.2)
 
+class serial_telemetry_subscriber(sensor_observer.subscriber):
+    def __init__(self, name, port, baudrate):
+        sensor_observer.subscriber.__init__(self,name)
+        self.port = port
+        self.baudrate = baudrate
+        self.ser = serial.Serial()
+        self.ser.port = self.port
+        self.ser.baudrate = self.baudrate
+        self.ser.open()
 
-#opening the serial port on the beaglebone usb port
-#this should really not be done in this class, there should be a serial communication class that is passed parameters
-ser = serial.Serial()
-ser.port = "/dev/ttyUSB0"
-ser.baudrate = 9600
-ser.open()
+    def update(self,data):
+        if self.ser.isOpen():
+            self.ser.write(json.dumps(data))
+            self.ser.write("\r\n")
 
-#starting the threads 
+
+class flight_control_subscriber(sensor_observer.subscriber):
+    def __init__(self,name):
+        sensor_observer.subscriber.__init__(self,name)
+    # TODO: define the update function for flight controller
+
+#create subject
+app_data = sensor_observer.publisher()
+
+#create observers
+serial_telemetry_subscriber = serial_telemetry_subscriber("serial","/dev/ttyUSB0",9600)
+flight_control_subscriber = flight_control_subscriber("flight control")
+
+#register observers to receive data from the app_data subject
+app_data.register(serial_telemetry_subscriber)
+app_data.register(flight_control_subscriber)
+
+#starting the threads
 publisher_thread().start()
 consumer_thread().start()

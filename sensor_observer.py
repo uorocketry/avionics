@@ -6,9 +6,7 @@ class subscriber:
         self.name = name
     def update(self, data):
         print('{} got data "{}"'.format(self.name, data))
-        return data
-        #opening the serial port on the beaglebone usb port
-
+        #classes that use this should override it to fit their needs
 
 class publisher:
     def __init__(self):
