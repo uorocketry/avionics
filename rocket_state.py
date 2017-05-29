@@ -4,7 +4,7 @@ import json
 import pprint
 from datetime import datetime
 
-def parse(accel, gps, baro):
+def pack(accel, gps, baro):
     x = rocket.Coords(3,4)
     data = {
     "Acceleration":accel,

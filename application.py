@@ -1,4 +1,4 @@
-from threading import Thread
+from threading import Thread, Timer
 import time
 import sensor_producer
 import sensor_observer
@@ -9,10 +9,8 @@ import rocket
 
 #global queue
 #Queue.Queue has an implentation of publisher/subscriber pattern built into it
-queue = Queue(1)
+#queue = Queue(1)
 
-def update():
-    print"updated"
 
 #highest level class
 #it is the subject in the observer pattern, has a list of all observers
@@ -22,16 +20,6 @@ def update():
 
 
 #producer Thread
-class publisher_thread(Thread):
-    def run(self):
-        global queue
-        while True:
-            queue.put(sensor_producer.poll_sensors())
-            #print "Produced", string
-            time.sleep(0.15)
-#find some way to use queue.join() and queue.task_done()
-#thread that receives data from sensor_producer via data_thread
-
 
 class consumer_thread(Thread):
     def run(self):
@@ -43,6 +31,27 @@ class consumer_thread(Thread):
             #print "received sensor data at: ", str(data["Time"])
             #app_data.dispatch(data)
             #time.sleep(0.15)
+
+def publisher_data(rocket):
+    app_data.dispatch(rocket)
+
+
+def publisher(callback):
+    Timer(0.01, publisher, args = (callback,)).start()
+    rocket = producer.produce()
+    callback(rocket)
+
+#class publisher_thread(Thread):
+#    def run(self):
+#        global queue
+#        callback()
+
+#        while True:
+            #queue.put(sensor_producer.poll_sensors())
+            #print "Produced", string
+            #time.sleep(0.15)
+#find some way to use queue.join() and queue.task_done()
+#thread that receives data from sensor_producer via data_thread
 
 class serial_telemetry_subscriber(sensor_observer.subscriber):
     def __init__(self, name, port, baudrate):
@@ -56,7 +65,7 @@ class serial_telemetry_subscriber(sensor_observer.subscriber):
 
     def update(self,data):
         if self.ser.isOpen():
-            self.ser.write(json.dumps(data))
+            self.ser.write(json.dumps(str(data)))
             self.ser.write("\r\n")
 
 
@@ -77,6 +86,14 @@ app_data.register(serial_telemetry_subscriber)
 app_data.register(flight_control_subscriber)
 
 #starting the threads
+#producer = sensor_producer.SensorProducer()
+#app_data.dispatch(producer.start())
+
 producer = sensor_producer.SensorProducer()
-producer.start()
+
+
+
+publisher_thread = Thread(target=publisher, args=(publisher_data,)).start()
+
+#publisher_thread(update).start()
 consumer_thread().start()
