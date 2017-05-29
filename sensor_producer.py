@@ -35,7 +35,6 @@ class SensorProducerThread(Thread, Observable):
 
         self.current_state = r
 
-
 class SensorProducer(object):
     def __init__(self):
         super(SensorProducer,self).__init__()
@@ -62,15 +61,11 @@ class SensorProducer(object):
         self.record_state(r)
         return r
 
-
-
 class Sensor(object):
     def __init__(self):
         object.__init__(self)
     def read():
         return None
-
-
 
 class GPSSensor(Sensor):
     def __init__(self):
@@ -148,40 +143,17 @@ class GPSSensor(Sensor):
                 self.sats=NMEA2_array[7]
         return rocket.GPS(self.lonDeg, self.latDeg)
 
-    #def read(self):
-    #    return rocket.GPS()# a gps object defined in uostar.py
-
 class AccelerationSensor(Sensor):
     def __init__(self):
         Sensor.__init__(self)
-        #self.i2c = Adafruit_I2C(0x53,2) #accelerometer is i2c address 53 in ic2-2
-        #i2c.write8(45, 8) #powering on the accelerometer
+        self.i2c = Adafruit_I2C(0x53,2) #accelerometer is i2c address 53 in ic2-2
+        i2c.write8(45, 8) #powering on the accelerometer
 
     def read(self):
-        #z-acceleration = i2c.readS8(54)
+        z-acceleration = i2c.readS8(54)
+        y-acceleration = i2c.readS8(52)
+        x-acceleration = i2c.readS8(50)
         return rocket.Acceleration()
-
-
-
-    #transmit data asynchronously to application after putting it in standard format
-#def poll_sensors():
-#    accel=get_accel() #get accelerometer data
-#    gps=get_gps()   #get gps data
-#    baro=get_baro()  #get pressure data
-#    prev_rocket_state =
-#    return uostar.RocketState(accel,gps,datetime.datetime.now())
-
-#def get_gps():
-#    return 1#poll gps and return gps data
-
-#def get_accel():
-    #i2c.write8(45, 8) #powering on the accelerometer
-    #return i2c.readS8(54)#return
-#    return 2
-    #poll accelerometer and return acceleration value
-
-
-
 
 if __name__ == '__main__':
         print SensorProducer.run()

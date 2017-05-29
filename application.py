@@ -1,6 +1,6 @@
 from threading import Thread, Timer
 import time
-import sensor_producer
+import dummy_sensor_producer as sensor_producer
 import sensor_observer
 from Queue import Queue
 import serial
@@ -33,6 +33,7 @@ class consumer_thread(Thread):
             #time.sleep(0.15)
 
 def publisher_data(rocket):
+    print "publish"
     app_data.dispatch(rocket.gps)
 
 
@@ -77,23 +78,13 @@ class flight_control_subscriber(sensor_observer.subscriber):
 #create subject
 app_data = sensor_observer.publisher()
 
-#create observers
 serial_telemetry_subscriber = serial_telemetry_subscriber("serial","/dev/ttyUSB0",9600)
 flight_control_subscriber = flight_control_subscriber("flight control")
 
-#register observers to receive data from the app_data subject
 app_data.register(serial_telemetry_subscriber)
 app_data.register(flight_control_subscriber)
 
-#starting the threads
-#producer = sensor_producer.SensorProducer()
-#app_data.dispatch(producer.start())
-
 producer = sensor_producer.SensorProducer()
 
-
-
 publisher_thread = Thread(target=publisher, args=(publisher_data,)).start()
-
-#publisher_thread(update).start()
 consumer_thread().start()
