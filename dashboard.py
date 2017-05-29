@@ -6,7 +6,9 @@ ser = serial.Serial()
 ser.port = "/dev/ttyUSB0"
 ser.baudrate = 9600
 ser.open()
+#while True:
+#    if ser.isOpen():
+#        data = ser.read(ser.inWaiting())
+#        print data
 while True:
-    if ser.isOpen():
-        data = ser.read(ser.inWaiting())
-        print data
+    print(ser.readline())
