@@ -1,39 +1,64 @@
 #if __name__ == "__main__"
-import datetime
 
-def integrate(t1,t2,y1,y2):
-    return (y2+y1)*(t2-t1)/2
+import math
 
-class RocketState(Object)
-    def __init__(accel, gps,rocket_state,time):
-        self.previous_state = rocket_state
-        self.accel = accel
-        self.gps = gps
+class RocketState(object):
+    def __init__(self, previous_state, time, acceleration, gps):
+        self.previous_state = previous_state
         self.time = time
-        get_velocity()
+        self.acceleration = acceleration
+        self.gps = gps
 
-    def __init__():
-        self.accel = 0
-        self.gps =
-        self.time = datetime.datetime.now()
-        self.velocity = 0
-        self.previous_state = None
-
-    def get_velocity():
-        if self.velocity == None:
-            delta_v = integrate(self.previous_state.time, self.time, self.previous_state.acceleration, self.acceleration )
-            self.velocity = self.previous_state.velocity + delta_v
-        return self.velocity
-
-    def get_position():
+        if previous_state == None:
+            self.velocity = 0
+            self.postion = 0
+        else:
+            time_diff_state = self.time - previous_state.time
+            self.velocity = acceleration.apply_to(previous_state.velocity, time_diff_state)
+            self.position = velocity.apply_to(previous_state.position, time_diff_state)
 
 
+class GPS(object):
+    #TODO implement proper version
+    def __init__(self, longi, lati):
+        self.long = longi
+        self.lati = lati
 
-#TODO burn this
-class Coords:
-    def __init__(self,x,y):
+
+class Vector(object):
+    def __init__(self, x, y, z):
         self.x = x
         self.y = y
+        self.z = z
 
-    def to_string():
-        print "("+x+","+y+")"
+    def __add__(self, other):
+        x = other.x + self.x
+        y = other.y + self.y
+        z = other.z + self.z
+        return Vector(x,y,z)
+
+
+class Acceleration(Vector):
+    def __init__(self, x=0, y=0, z=0):
+        Vector.__init__(self, x, y, z)
+
+    def apply_to(self, velocity, time):
+        x = velocity.x + self.x * time
+        y = velocity.y + self.y * time
+        z = velocity.z + self.z * time
+        return Velocity(x,y,z)
+
+
+class Velocity(Vector):
+    def __init__(self, x=0, y=0, z=0):
+        Vector.__init__(self, x, y, z)
+
+    def apply_to(self, postion, time):
+        x = position.x + self.x * time
+        y = position.y + self.y * time
+        z = position.z + self.z * time
+        return Position(x, y, z)
+
+class Position(Vector):
+    def __init__(self, x=0, y=0, z=0):
+        Vector.__init__(self, x, y, z)

@@ -6,7 +6,7 @@ class subscriber:
         self.name = name
     def update(self, data):
         print('{} got data "{}"'.format(self.name, data))
-        #classes that use this should override it to fit their needs
+        #classes that use this should override it to suit their needs
 
 class publisher:
     def __init__(self):
