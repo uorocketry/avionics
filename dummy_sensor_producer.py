@@ -3,7 +3,7 @@ import rocket_state
 import serial
 import rocket
 import datetime
-from sensor_observer import publisher as Observable
+from observer import Subject as Observable
 from time import sleep
 
 class SensorProducer(object):

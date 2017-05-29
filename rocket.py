@@ -1,5 +1,3 @@
-#if __name__ == "__main__"
-
 import math
 
 class State(object):
@@ -78,11 +76,18 @@ class Acceleration(Vector):
         Vector.__init__(self, x, y, z)
 
     def apply_to(self, velocity, time):
-        #x = velocity.x + self.x * time
-        #y = velocity.y + self.y * time
-        #z = velocity.z + self.z * time
+        x = velocity.x + self.x * time
+        y = velocity.y + self.y * time
+        z = velocity.z + self.z * time
         return Velocity(0,0,0)
 
 class Position(Vector):
     def __init__(self, x=0, y=0, z=0):
         Vector.__init__(self, x, y, z)
+
+
+
+#TODO implement this
+
+#if __name__ == "__main__"
+#do something

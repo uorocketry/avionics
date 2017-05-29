@@ -1,17 +1,15 @@
-#an implementation of the Observer pattern for rocket data
-
-
-class subscriber(object):
+#an implementation of the Observer pattern
+class Observer(object):
     def __init__(self, name):
-        super(subscriber,self).__init__
+        super(Observer,self).__init__
         self.name = name
     def update(self, data):
         print('{} got data "{}"'.format(self.name, data))
         #classes that use this should override it to suit their needs
 
-class publisher(object):
+class Subject(object):
     def __init__(self):
-        super(publisher,self).__init__
+        super(Subject,self).__init__
         self.subscribers = set()
     def register(self, who):
         self.subscribers.add(who)

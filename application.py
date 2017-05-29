@@ -1,39 +1,15 @@
 from threading import Thread, Timer
-import time
 import dummy_sensor_producer as sensor_producer
-import sensor_observer
-from Queue import Queue
+import observer
 import serial
 import json
 import rocket
 
-#global queue
-#Queue.Queue has an implentation of publisher/subscriber pattern built into it
-#queue = Queue(1)
-
-
-#highest level class
-#it is the subject in the observer pattern, has a list of all observers
-
-#store the current rocket_state and the previous rocket_state
-#use them to integrate acceleration over the time interval to find velocity
-
-
-#producer Thread
-
-class consumer_thread(Thread):
-    def run(self):
-        print "consumer_thread"
-        #while True:
-        #    print "hello"
-	#main thread deserializes data
-            #data = json.loads(queue.get())
-            #print "received sensor data at: ", str(data["Time"])
-            #app_data.dispatch(data)
-            #time.sleep(0.15)
+#main thread, has a callback for the thread running the publish function
+# it is the subject in the observer pattern, has a list of all observers
 
 def publisher_data(rocket):
-    app_data.dispatch(rocket)
+    app_data_subject.dispatch(rocket)
 
 
 def publish(callback):
@@ -42,9 +18,9 @@ def publish(callback):
     callback(rocket)
 
 
-class serial_telemetry_subscriber(sensor_observer.subscriber):
+class SerialTelemetryObserver(observer.Observer):
     def __init__(self, name, port, baudrate):
-        sensor_observer.subscriber.__init__(self,name)
+        observer.Observer.__init__(self,name)
         self.port = port
         self.baudrate = baudrate
         self.ser = serial.Serial()
@@ -58,21 +34,20 @@ class serial_telemetry_subscriber(sensor_observer.subscriber):
             self.ser.write("\r\n")
 
 
-class flight_control_subscriber(sensor_observer.subscriber):
+class FlightControlObserver(observer.Observer):
     def __init__(self,name):
-        sensor_observer.subscriber.__init__(self,name)
-    # TODO: define the update function for flight controller
+        observer.Observer.__init__(self,name)
+    # TODO: override the update function for flight controller
 
-#create subject
-app_data = sensor_observer.publisher()
+app_data_subject = observer.Subject()
 
-serial_telemetry_subscriber = serial_telemetry_subscriber("serial","/dev/ttyUSB0",9600)
-flight_control_subscriber = flight_control_subscriber("flight control")
+serial_telemetry_observer = SerialTelemetryObserver("serial","/dev/ttyUSB0",9600)
+flight_control_observer = FlightControlObserver("flight control")
 
-app_data.register(serial_telemetry_subscriber)
-app_data.register(flight_control_subscriber)
+app_data_subject.register(serial_telemetry_observer)
+app_data_subject.register(flight_control_observer)
 
 producer = sensor_producer.SensorProducer()
 
 publisher_thread = Thread(target=publish, args=(publisher_data,)).start()
-consumer_thread().start()
+#consumer_thread().start()
