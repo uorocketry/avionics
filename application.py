@@ -33,11 +33,11 @@ class consumer_thread(Thread):
             #time.sleep(0.15)
 
 def publisher_data(rocket):
-    app_data.dispatch(rocket)
+    app_data.dispatch(rocket.gps)
 
 
 def publisher(callback):
-    Timer(0.01, publisher, args = (callback,)).start()
+    Timer(1, publisher, args = (callback,)).start()
     rocket = producer.produce()
     callback(rocket)
 
@@ -65,7 +65,7 @@ class serial_telemetry_subscriber(sensor_observer.subscriber):
 
     def update(self,data):
         if self.ser.isOpen():
-            self.ser.write(json.dumps(str(data)))
+            self.ser.write(json.dumps(str(data.lati)))
             self.ser.write("\r\n")
 
 

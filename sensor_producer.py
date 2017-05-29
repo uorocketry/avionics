@@ -6,6 +6,7 @@ import serial
 import rocket
 import datetime
 from sensor_observer import publisher as Observable
+from time import sleep
 
 class SensorProducerThread(Thread, Observable):
     def __init__(self):
@@ -91,29 +92,29 @@ class GPSSensor(Sensor):
         BAUD_57600 = "$PMTK251,57600*2C\r\n"          #Set Baud Rate at 57600
         BAUD_9600 ="$PMTK251,9600*17\r\n"             #Set 9600 Baud Rate
         #Commands for which NMEA Sentences are sent
-        ser.write(BAUD_57600)
+        self.ser.write(BAUD_57600)
         sleep(1)
-        ser.baudrate=57600
+        self.ser.baudrate=57600
         GPRMC_ONLY= "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n" #Send only the GPRMC Sentence
         GPRMC_GPGGA="$PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"#Send GPRMC AND GPGGA Sentences
         SEND_ALL ="$PMTK314,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n" #Send All Sentences
         SEND_NOTHING="$PMTK314,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n" #Send Nothing
-        ser.write(UPDATE_200_msec)
+        self.ser.write(UPDATE_200_msec)
         sleep(1)
-        ser.write(MEAS_200_msec)
+        self.ser.write(MEAS_200_msec)
         sleep(1)
-        ser.write(GPRMC_GPGGA)
+        self.ser.write(GPRMC_GPGGA)
         sleep(1)
-        ser.flushInput()
-        ser.flushInput()
+        self.ser.flushInput()
+        self.ser.flushInput()
         print "GPS Initialized"
     def read(self):
-        ser.flushInput()
-        ser.flushInput()
-        while ser.inWaiting()==0:
+        self.ser.flushInput()
+        self.ser.flushInput()
+        while self.ser.inWaiting()==0:
                 pass
         self.NMEA1=ser.readline()
-        while ser.inWaiting()==0:
+        while self.ser.inWaiting()==0:
                 pass
         self.NMEA2=ser.readline()
         NMEA1_array=self.NMEA1.split(',')
