@@ -4,15 +4,22 @@ from Adafruit_I2C import Adafruit_I2C
 import rocket_state
 import Adafruit_BBIO.UART as UART
 import serial
-import uostar
+import rocket
 import datetime
 from Observer import Observer, Observable
 
 class SensorProducer(Thread, Observable):
     def __init__(self):
-        self.current_state = uostar.RocketState()
+        self.current_state = rocket.state(None,datetime.datetime.now(),0,None)
+        self.gps_sensor = GPSSensor()
+        self.accelerometer = AccelerationSensor()
 
     def run():
+        if current_state.previous_state == None:
+
+        else:
+            #callback with
+            rocket.State(current_state.previous_state,self.time)
         record_state()
 
     def record_state():
@@ -22,7 +29,7 @@ class SensorProducer(Thread, Observable):
 class Sensor(object):
     def __init__(self):
         Object.__init__(self)
-    def get_data():
+    def read():
         return None
 
 
@@ -31,19 +38,20 @@ class GPSSensor(Sensor):
     def __init__(self):
         Sensor.__init__(self)
         UART.setup("UART1")
-        ser = serial.Serial(port = '/dev/ttyO1', baudrate=9600)
+        self.ser = serial.Serial(port = '/dev/ttyO1', baudrate=9600)
 
-    def get_data():
-        return # a gps object defined in uostar.py
+    def read():
+        return rocket.GPS()# a gps object defined in uostar.py
 
 class AccelerationSensor(Sensor):
     def __init__(self):
-        self.i2c = Adafruit_I2C(0x53,2) #accelerometer is i2c address 53 in ic2-2
-        i2c.write8(45, 8) #powering on the accelerometer
+        Sensor.__init__(self)
+        #self.i2c = Adafruit_I2C(0x53,2) #accelerometer is i2c address 53 in ic2-2
+        #i2c.write8(45, 8) #powering on the accelerometer
 
-    def get_data():
+    def read():
         #z-acceleration = i2c.readS8(54)
-
+        return rocket.Acceleration()
 
 
 

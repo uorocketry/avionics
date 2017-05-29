@@ -5,7 +5,7 @@ import sensor_observer
 from Queue import Queue
 import serial
 import json
-import uostar
+import rocket
 
 #global queue
 #Queue.Queue has an implentation of publisher/subscriber pattern built into it
@@ -29,7 +29,7 @@ class publisher_thread(Thread):
 #find some way to use queue.join() and queue.task_done()
 #thread that receives data from sensor_producer via data_thread
 
-consumer_thread = 
+consumer_thread =
 
 class consumer_thread(Thread):
     def run(self):

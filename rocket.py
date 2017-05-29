@@ -20,7 +20,7 @@ class State(object):
 
 class GPS(object):
     #TODO implement proper version
-    def __init__(self, longi, lati):
+    def __init__(self, longi=0, lati=0):
         self.long = longi
         self.lati = lati
 
