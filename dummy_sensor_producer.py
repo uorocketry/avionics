@@ -1,10 +1,7 @@
 from threading import Thread
 import rocket_state
-import serial
 import rocket
 import datetime
-from observer import Subject as Observable
-from time import sleep
 
 class SensorProducer(object):
     def __init__(self):

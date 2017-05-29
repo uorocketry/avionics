@@ -8,32 +8,6 @@ import datetime
 from sensor_observer import publisher as Observable
 from time import sleep
 
-class SensorProducerThread(Thread, Observable):
-    def __init__(self):
-        Thread.__init__(self,group=None, target=None, name=None, args=(), kwargs={})
-        #super(SensorProducer,self).__init__()
-        self.current_state = rocket.State(None,datetime.datetime.now(),0,None)
-        self.gps_sensor = GPSSensor()
-        self.accelerometer = AccelerationSensor()
-
-    #def record_state(r):
-    #    self.current_state = r
-
-    def run(self):
-        print"ran"
-        if self.current_state.previous_state == None:
-                a = rocket.Acceleration()
-                g = rocket.GPS()
-                r = rocket.State(None, datetime.datetime.now(), a, g)
-        else:
-                a = accelerometer.read()
-                g = gps_sensor.read()
-                r = rocket.State(self.current_state.previous_state, datetime.datetime.now(), a, g)
-
-        #callback with
-        #record_state(r)
-
-        self.current_state = r
 
 class SensorProducer(object):
     def __init__(self):
@@ -48,7 +22,6 @@ class SensorProducer(object):
 
 
     def produce(self):
-        #print"produced"
         if self.current_state.previous_state == None:
                 a = rocket.Acceleration()
                 g = rocket.GPS()
@@ -57,7 +30,6 @@ class SensorProducer(object):
                 a = self.accelerometer.read()
                 g = self.gps_sensor.read()
                 r = rocket.State(self.current_state.previous_state, datetime.datetime.now(), a, g)
-        #callback with
         self.record_state(r)
         return r
 

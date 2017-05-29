@@ -50,4 +50,3 @@ app_data_subject.register(flight_control_observer)
 producer = sensor_producer.SensorProducer()
 
 publisher_thread = Thread(target=publish, args=(publisher_data,)).start()
-#consumer_thread().start()
