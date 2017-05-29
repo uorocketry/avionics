@@ -2,7 +2,7 @@
 
 import math
 
-class RocketState(object):
+class State(object):
     def __init__(self, previous_state, time, acceleration, gps):
         self.previous_state = previous_state
         self.time = time

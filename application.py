@@ -28,6 +28,9 @@ class publisher_thread(Thread):
             time.sleep(0.15)
 #find some way to use queue.join() and queue.task_done()
 #thread that receives data from sensor_producer via data_thread
+
+consumer_thread = 
+
 class consumer_thread(Thread):
     def run(self):
         while True:
