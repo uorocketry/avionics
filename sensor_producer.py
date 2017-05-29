@@ -76,10 +76,6 @@ class GPSSensor(Sensor):
         Sensor.__init__(self)
         UART.setup("UART1")
         self.ser = serial.Serial(port = '/dev/ttyO1', baudrate=9600)
-
-    def __init__(self):
-        Sensor.__init__(self)
-
         #This sets up variables for useful commands.
         #This set is used to set the rate the GPS reports
         UPDATE_10_sec=  "$PMTK220,10000*2F\r\n" #Update Every 10 Seconds
