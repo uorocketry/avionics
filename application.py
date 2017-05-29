@@ -11,6 +11,9 @@ import rocket
 #Queue.Queue has an implentation of publisher/subscriber pattern built into it
 queue = Queue(1)
 
+def update():
+    print"updated"
+
 #highest level class
 #it is the subject in the observer pattern, has a list of all observers
 
@@ -29,17 +32,17 @@ class publisher_thread(Thread):
 #find some way to use queue.join() and queue.task_done()
 #thread that receives data from sensor_producer via data_thread
 
-consumer_thread =
 
 class consumer_thread(Thread):
     def run(self):
-        while True:
+        print "consumer_thread"
+        #while True:
+        #    print "hello"
 	#main thread deserializes data
-            data = json.loads(queue.get())
-            data["velocity"]=uostar.integrate_2(1,1,1,1)
-            print "received sensor data at: ", str(data["Time"])
-            app_data.dispatch(data)
-            time.sleep(0.15)
+            #data = json.loads(queue.get())
+            #print "received sensor data at: ", str(data["Time"])
+            #app_data.dispatch(data)
+            #time.sleep(0.15)
 
 class serial_telemetry_subscriber(sensor_observer.subscriber):
     def __init__(self, name, port, baudrate):
@@ -74,5 +77,6 @@ app_data.register(serial_telemetry_subscriber)
 app_data.register(flight_control_subscriber)
 
 #starting the threads
-publisher_thread().start()
+producer = sensor_producer.SensorProducer()
+producer.start()
 consumer_thread().start()
