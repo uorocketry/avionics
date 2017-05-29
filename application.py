@@ -33,26 +33,14 @@ class consumer_thread(Thread):
             #time.sleep(0.15)
 
 def publisher_data(rocket):
-    print "publish"
-    app_data.dispatch(rocket.gps)
+    app_data.dispatch(rocket)
 
 
-def publisher(callback):
-    Timer(1, publisher, args = (callback,)).start()
+def publish(callback):
+    Timer(1, publish, args = (callback,)).start()
     rocket = producer.produce()
     callback(rocket)
 
-#class publisher_thread(Thread):
-#    def run(self):
-#        global queue
-#        callback()
-
-#        while True:
-            #queue.put(sensor_producer.poll_sensors())
-            #print "Produced", string
-            #time.sleep(0.15)
-#find some way to use queue.join() and queue.task_done()
-#thread that receives data from sensor_producer via data_thread
 
 class serial_telemetry_subscriber(sensor_observer.subscriber):
     def __init__(self, name, port, baudrate):
@@ -66,7 +54,7 @@ class serial_telemetry_subscriber(sensor_observer.subscriber):
 
     def update(self,data):
         if self.ser.isOpen():
-            self.ser.write(json.dumps(str(data.lati)))
+            self.ser.write(json.dumps(data.to_dict()))
             self.ser.write("\r\n")
 
 
@@ -86,5 +74,5 @@ app_data.register(flight_control_subscriber)
 
 producer = sensor_producer.SensorProducer()
 
-publisher_thread = Thread(target=publisher, args=(publisher_data,)).start()
+publisher_thread = Thread(target=publish, args=(publisher_data,)).start()
 consumer_thread().start()

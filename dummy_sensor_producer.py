@@ -9,7 +9,7 @@ from time import sleep
 class SensorProducer(object):
     def __init__(self):
         super(SensorProducer,self).__init__()
-        self.current_state = rocket.State(None,datetime.datetime.now(),0,None)
+        self.current_state = rocket.State(None,None,0,None)
         self.gps_sensor = GPSSensor()
         self.accelerometer = AccelerationSensor()
 
@@ -17,16 +17,14 @@ class SensorProducer(object):
         self.current_state.previous_state = r
 
     def produce(self):
-        print"produced"
         if self.current_state.previous_state == None:
-                a = rocket.Acceleration()
-                g = rocket.GPS()
-                r = rocket.State(None, datetime.datetime.now(), a, g)
+            a = rocket.Acceleration()
+            g = rocket.GPS()
+            r = rocket.State(None, str(datetime.datetime.now()), a, g)
         else:
-                a = self.accelerometer.read()
-                g = self.gps_sensor.read()
-                r = rocket.State(self.current_state.previous_state, datetime.datetime.now(), a, g)
-        #callback with
+            a = self.accelerometer.read()
+            g = self.gps_sensor.read()
+            r = rocket.State(self.current_state.previous_state, str(datetime.datetime.now()), a, g)
         self.record_state(r)
         return r
 
